@@ -20,12 +20,13 @@ window.addEventListener('hashchange', () => {
 });
 
 newsFeeds.forEach((newsFeed) => {
-  const li = document.createElement('li');
-  const a = document.createElement('a');
-  a.innerHTML = newsFeed.title;
-  a.href = `#${newsFeed.id}`;
-  li.appendChild(a);
-  ul.appendChild(li);
+  const div = document.createElement('div');
+  div.innerHTML = `
+    <li>
+      <a href='#${newsFeed.id}'>${newsFeed.title}(${newsFeed.comments_count})</a>
+    </li>
+  `;
+  ul.appendChild(div);
 });
 
 container.appendChild(ul);
