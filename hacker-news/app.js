@@ -12,23 +12,28 @@ const getData = (url) => {
 const newsFeeds = getData(NEWS_URL).slice(0, 10);
 
 const ul = document.createElement('ul');
-const content = document.createElement('div');
 
 window.addEventListener('hashchange', () => {
   const id = location.hash.substr(1);
   const title = getData(CONTENT_URL.replace('@id', id)).title;
-  content.innerHTML = title;
+  container.innerHTML = `
+    <h1>${title}</h1>
+
+    <div><a href='#'>돌아가기</a></div>
+  `;
 });
 
+const newsList = [];
+newsList.push('<ul>');
+
 newsFeeds.forEach((newsFeed) => {
-  const div = document.createElement('div');
-  div.innerHTML = `
+  newsList.push(`
     <li>
       <a href='#${newsFeed.id}'>${newsFeed.title}(${newsFeed.comments_count})</a>
     </li>
-  `;
-  ul.appendChild(div);
+  `);
 });
+newsList.push('</ul>');
 
-container.appendChild(ul);
+container.innerHTML = newsList.join('');
 container.appendChild(content);
