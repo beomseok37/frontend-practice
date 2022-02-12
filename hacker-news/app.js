@@ -19,9 +19,22 @@ const showNewsFeeds = () => {
     (store.currentPage - 1) * 10,
     store.currentPage * 10
   );
+
+  let template = `
+    <div>
+      <h1>hacker news</h1>
+      <ul>
+        {{__news_feed__}}
+      </ul>
+      <div>
+        <a href = '#/page/{{__prev_page__}}'>이전 페이지</a>
+        <a href = '#/page/{{__next_page__}}'>다음 페이지</a>
+      </div>
+    </div>
+  `;
+
   const newsList = [];
 
-  newsList.push('<ul>');
   newsFeeds.forEach((newsFeed) => {
     newsList.push(`
     <li>
@@ -29,22 +42,18 @@ const showNewsFeeds = () => {
     </li>
     `);
   });
-  newsList.push('</ul>');
 
-  newsList.push(`
-    <div>
-      <a href='#/page/${
-        store.currentPage === 1 ? 1 : store.currentPage - 1
-      }'>이전 페이지</a>
-      <a href='#/page/${
-        store.currentPage === Number(datas.length / 10)
-          ? Number(datas.length / 10)
-          : store.currentPage + 1
-      }'>다음 페이지</a>
-    </div>
-  `);
+  const prevPage = store.currentPage === 1 ? 1 : store.currentPage - 1;
+  const nextPage =
+    store.currentPage === Number(datas.length / 10)
+      ? Number(datas.length / 10)
+      : store.currentPage + 1;
 
-  container.innerHTML = newsList.join('');
+  template = template.replace('{{__news_feed__}}', newsList.join(''));
+  template = template.replace('{{__prev_page__}}', prevPage);
+  template = template.replace('{{__next_page__}}', nextPage);
+
+  container.innerHTML = template;
 };
 
 const showNewsDetail = () => {
