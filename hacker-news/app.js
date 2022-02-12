@@ -13,16 +13,15 @@ const getData = (url) => {
   return JSON.parse(ajax.response);
 };
 const datas = getData(NEWS_URL);
-console.log(datas.length);
+
 const showNewsFeeds = () => {
-  console.log(store.currentPage);
   const newsFeeds = datas.slice(
     (store.currentPage - 1) * 10,
     store.currentPage * 10
   );
   const newsList = [];
-  newsList.push('<ul>');
 
+  newsList.push('<ul>');
   newsFeeds.forEach((newsFeed) => {
     newsList.push(`
     <li>
@@ -31,6 +30,7 @@ const showNewsFeeds = () => {
     `);
   });
   newsList.push('</ul>');
+
   newsList.push(`
     <div>
       <a href='#/page/${
@@ -43,12 +43,14 @@ const showNewsFeeds = () => {
       }'>다음 페이지</a>
     </div>
   `);
+
   container.innerHTML = newsList.join('');
 };
 
 const showNewsDetail = () => {
   const id = location.hash.substr(7);
   const title = getData(CONTENT_URL.replace('@id', id)).title;
+
   container.innerHTML = `
   <h1>${title}</h1>
 
@@ -58,6 +60,7 @@ const showNewsDetail = () => {
 
 const router = () => {
   const routePath = location.hash;
+
   if (routePath === '') {
     showNewsFeeds();
   } else if (routePath.includes('page')) {
