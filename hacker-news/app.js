@@ -13,15 +13,27 @@ const getData = (url) => {
   return JSON.parse(ajax.response);
 };
 const datas = getData(NEWS_URL);
-console.log(datas.length);
+
 const showNewsFeeds = () => {
-  console.log(store.currentPage);
   const newsFeeds = datas.slice(
     (store.currentPage - 1) * 10,
     store.currentPage * 10
   );
+
+  let template = `
+    <div class='container mx-auto p-4'>
+      <h1>hacker news</h1>
+      <ul>
+        {{__news_feed__}}
+      </ul>
+      <div>
+        <a href = '#/page/{{__prev_page__}}'>이전 페이지</a>
+        <a href = '#/page/{{__next_page__}}'>다음 페이지</a>
+      </div>
+    </div>
+  `;
+
   const newsList = [];
-  newsList.push('<ul>');
 
   newsFeeds.forEach((newsFeed) => {
     newsList.push(`
@@ -30,25 +42,24 @@ const showNewsFeeds = () => {
     </li>
     `);
   });
-  newsList.push('</ul>');
-  newsList.push(`
-    <div>
-      <a href='#/page/${
-        store.currentPage === 1 ? 1 : store.currentPage - 1
-      }'>이전 페이지</a>
-      <a href='#/page/${
-        store.currentPage === Number(datas.length / 10)
-          ? Number(datas.length / 10)
-          : store.currentPage + 1
-      }'>다음 페이지</a>
-    </div>
-  `);
-  container.innerHTML = newsList.join('');
+
+  const prevPage = store.currentPage === 1 ? 1 : store.currentPage - 1;
+  const nextPage =
+    store.currentPage === Number(datas.length / 10)
+      ? Number(datas.length / 10)
+      : store.currentPage + 1;
+
+  template = template.replace('{{__news_feed__}}', newsList.join(''));
+  template = template.replace('{{__prev_page__}}', prevPage);
+  template = template.replace('{{__next_page__}}', nextPage);
+
+  container.innerHTML = template;
 };
 
 const showNewsDetail = () => {
   const id = location.hash.substr(7);
   const title = getData(CONTENT_URL.replace('@id', id)).title;
+
   container.innerHTML = `
   <h1>${title}</h1>
 
@@ -58,6 +69,7 @@ const showNewsDetail = () => {
 
 const router = () => {
   const routePath = location.hash;
+
   if (routePath === '') {
     showNewsFeeds();
   } else if (routePath.includes('page')) {
