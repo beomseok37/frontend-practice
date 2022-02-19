@@ -1,17 +1,29 @@
 type Store = {
-  currentPage: Number;
+  currentPage: number;
   feeds: NewsFeed[];
 };
 
-type NewsFeed = {
+type News = {
   id: number;
-  comments_count: number;
+  time_ago: string;
+  title: string;
   url: string;
   user: string;
-  time_ago: string;
+  content: string;
+};
+type NewsFeed = News & {
+  comments_count: number;
   points: number;
-  title: string;
   read?: boolean;
+};
+
+type NewsDetail = News & {
+  comments: NewsComment[];
+};
+
+type NewsComment = News & {
+  comments: NewsComment[];
+  level: number;
 };
 
 const container: HTMLElement | null = document.getElementById('root');
@@ -23,22 +35,21 @@ const store: Store = {
   feeds: [],
 };
 
-function getData(url) {
+function getData<AxiosType>(url: string): AxiosType {
   ajax.open('GET', url, false);
   ajax.send();
 
   return JSON.parse(ajax.response);
 }
 
-function makeFeeds(feeds) {
+function makeFeeds(feeds: NewsFeed[]): NewsFeed[] {
   for (let i = 0; i < feeds.length; i++) {
     feeds[i].read = false;
   }
-
   return feeds;
 }
 
-function updateView(html: string) {
+function updateView(html: string): void {
   if (container) {
     container.innerHTML = html;
   } else {
@@ -46,7 +57,7 @@ function updateView(html: string) {
   }
 }
 
-function newsFeed() {
+function newsFeed(): void {
   let newsFeed: NewsFeed[] = store.feeds;
   const newsList = [];
   let template = `
@@ -75,7 +86,7 @@ function newsFeed() {
   `;
 
   if (newsFeed.length === 0) {
-    newsFeed = store.feeds = makeFeeds(getData(NEWS_URL));
+    newsFeed = store.feeds = makeFeeds(getData<NewsFeed[]>(NEWS_URL));
   }
 
   for (let i = (store.currentPage - 1) * 10; i < store.currentPage * 10; i++) {
@@ -107,16 +118,19 @@ function newsFeed() {
   template = template.replace('{{__news_feed__}}', newsList.join(''));
   template = template.replace(
     '{{__prev_page__}}',
-    store.currentPage > 1 ? store.currentPage - 1 : 1
+    String(store.currentPage > 1 ? store.currentPage - 1 : 1)
   );
-  template = template.replace('{{__next_page__}}', store.currentPage + 1);
+  template = template.replace(
+    '{{__next_page__}}',
+    String(store.currentPage + 1)
+  );
 
   updateView(template);
 }
 
-function newsDetail() {
+function newsDetail(): void {
   const id = location.hash.substr(7);
-  const newsContent = getData(CONTENT_URL.replace('@id', id));
+  const newsContent = getData<NewsDetail>(CONTENT_URL.replace('@id', id));
   let template = `
     <div class="bg-gray-600 min-h-screen pb-8">
       <div class="bg-white text-xl">
@@ -153,11 +167,15 @@ function newsDetail() {
     }
   }
 
-  function makeComment(comments, called = 0) {
-    const commentString = [];
+  updateView(
+    template.replace('{{__comments__}}', makeComment(newsContent.comments))
+  );
+}
+function makeComment(comments: NewsComment[], called = 0): string {
+  const commentString = [];
 
-    for (let i = 0; i < comments.length; i++) {
-      commentString.push(`
+  for (let i = 0; i < comments.length; i++) {
+    commentString.push(`
         <div style="padding-left: ${called * 40}px;" class="mt-4">
           <div class="text-gray-400">
             <i class="fa fa-sort-up mr-2"></i>
@@ -167,17 +185,12 @@ function newsDetail() {
         </div>      
       `);
 
-      if (comments[i].comments.length > 0) {
-        commentString.push(makeComment(comments[i].comments, called + 1));
-      }
+    if (comments[i].comments.length > 0) {
+      commentString.push(makeComment(comments[i].comments, called + 1));
     }
-
-    return commentString.join('');
   }
 
-  updateView(
-    template.replace('{{__comments__}}', makeComment(newsContent.comments))
-  );
+  return commentString.join('');
 }
 
 function router() {
