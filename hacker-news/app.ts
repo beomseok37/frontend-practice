@@ -39,12 +39,6 @@ const store: Store = {
   feeds: [],
 };
 
-function getData<AxiosType>(url: string): AxiosType {
-  ajax.open('GET', url, false);
-  ajax.send();
-
-  return JSON.parse(ajax.response);
-}
 function applyApiMixin(targetClass: any, baseClasses: any[]) {
   baseClasses.forEach((baseClass) => {
     Object.getOwnPropertyNames(baseClass.prototype).forEach((name) => {
@@ -192,7 +186,7 @@ class NewsFeedView extends View {
         {{__news_feed__}}        
       </div>
     </div>
-  `;
+    `;
     super(containerId, template);
     this.api = new NewsFeedApi();
     this.feeds = store.feeds;
