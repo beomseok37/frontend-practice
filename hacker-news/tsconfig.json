@@ -3,6 +3,6 @@
     "strict": true,
     "module": "CommonJS",
     "sourceMap": true,
-    "lib": ["es5", "DOM"]
+    "lib": ["DOM", "ES2015"]
   }
 }
