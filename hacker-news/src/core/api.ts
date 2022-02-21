@@ -21,21 +21,3 @@ export class NewsDetailApi extends Api {
     return this.getRequest<NewsDetail>(CONTENT_URL.replace('@id', id));
   }
 }
-
-function applyApiMixin(targetClass: any, baseClasses: any[]) {
-  baseClasses.forEach((baseClass) => {
-    Object.getOwnPropertyNames(baseClass.prototype).forEach((name) => {
-      const descriptor = Object.getOwnPropertyDescriptor(
-        baseClass.prototype,
-        name
-      );
-
-      if (descriptor) {
-        Object.defineProperty(targetClass.prototype, name, descriptor);
-      }
-    });
-  });
-}
-
-applyApiMixin(NewsFeedApi, [Api]);
-applyApiMixin(NewsDetailApi, [Api]);
