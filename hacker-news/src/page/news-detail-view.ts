@@ -1,6 +1,7 @@
 import View from '../core/view';
 import { NewsDetailApi } from '../core/api';
 import { NewsComment, NewsStore } from '../types';
+import { CONTENT_URL } from '../config';
 
 export default class NewsDetailView extends View {
   store: NewsStore;
@@ -40,7 +41,7 @@ export default class NewsDetailView extends View {
 
   render(): void {
     const id = location.hash.substr(7);
-    const api = new NewsDetailApi();
+    const api = new NewsDetailApi(CONTENT_URL.replace('@id', id));
     const newsDetail = api.getData(id);
 
     for (let i = 0; i < this.store.numberOfFeed; i++) {
