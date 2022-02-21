@@ -7,11 +7,14 @@ export class Api {
     this.ajax = new XMLHttpRequest();
     this.url = url;
   }
-  protected getRequest<AjaxResponse>(): AjaxResponse {
-    this.ajax.open('GET', this.url, false);
+  protected getRequest<AjaxResponse>(
+    callback: (data: AjaxResponse) => void
+  ): void {
+    this.ajax.open('GET', this.url);
+    this.ajax.addEventListener('load', () => {
+      callback(JSON.parse(this.ajax.response) as AjaxResponse);
+    });
     this.ajax.send();
-
-    return JSON.parse(this.ajax.response) as AjaxResponse;
   }
 }
 
@@ -19,8 +22,8 @@ export class NewsFeedApi extends Api {
   constructor(url: string) {
     super(url);
   }
-  getData(): NewsFeed[] {
-    return this.getRequest<NewsFeed[]>();
+  getData(callback: (data: NewsFeed[]) => void): void {
+    return this.getRequest<NewsFeed[]>(callback);
   }
 }
 
@@ -28,7 +31,7 @@ export class NewsDetailApi extends Api {
   constructor(url: string) {
     super(url);
   }
-  getData(id: string): NewsDetail {
-    return this.getRequest<NewsDetail>();
+  getData(callback: (data: NewsDetail) => void): void {
+    return this.getRequest<NewsDetail>(callback);
   }
 }
