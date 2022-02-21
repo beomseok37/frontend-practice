@@ -1,20 +1,28 @@
 import { NewsFeed, NewsDetail } from '../types';
 export class Api {
-  ajax: XMLHttpRequest;
+  xhr: XMLHttpRequest;
   url: string;
 
   constructor(url: string) {
-    this.ajax = new XMLHttpRequest();
+    this.xhr = new XMLHttpRequest();
     this.url = url;
   }
-  protected getRequest<AjaxResponse>(
+  protected getRequestWithXHR<AjaxResponse>(
     callback: (data: AjaxResponse) => void
   ): void {
-    this.ajax.open('GET', this.url);
-    this.ajax.addEventListener('load', () => {
-      callback(JSON.parse(this.ajax.response) as AjaxResponse);
+    this.xhr.open('GET', this.url);
+    this.xhr.addEventListener('load', () => {
+      callback(JSON.parse(this.xhr.response) as AjaxResponse);
     });
-    this.ajax.send();
+    this.xhr.send();
+  }
+  protected getRequestWithPromise<AjaxResponse>(
+    callback: (data: AjaxResponse) => void
+  ) {
+    fetch(this.url)
+      .then((response) => response.json())
+      .then(callback)
+      .catch(() => console.log('데이터를 불러오지 못햇습니다.'));
   }
 }
 
@@ -22,8 +30,11 @@ export class NewsFeedApi extends Api {
   constructor(url: string) {
     super(url);
   }
-  getData(callback: (data: NewsFeed[]) => void): void {
-    return this.getRequest<NewsFeed[]>(callback);
+  getDataWithXHR(callback: (data: NewsFeed[]) => void): void {
+    return this.getRequestWithXHR<NewsFeed[]>(callback);
+  }
+  getDataWithPromise(callback: (data: NewsFeed[]) => void): void {
+    return this.getRequestWithPromise<NewsFeed[]>(callback);
   }
 }
 
@@ -31,7 +42,10 @@ export class NewsDetailApi extends Api {
   constructor(url: string) {
     super(url);
   }
-  getData(callback: (data: NewsDetail) => void): void {
-    return this.getRequest<NewsDetail>(callback);
+  getDataWithXHR(callback: (data: NewsDetail) => void): void {
+    return this.getRequestWithXHR<NewsDetail>(callback);
+  }
+  getDataWithPromise(callback: (data: NewsDetail) => void): void {
+    return this.getRequestWithPromise<NewsDetail>(callback);
   }
 }
