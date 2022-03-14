@@ -6,7 +6,7 @@
 - 브라우저가 HTML을 전부 읽고 DOM 트리를 완성하는 즉시 발생한다. 이미지 파일이나 스타일 시트 등의 자원이 로드 되는 것은 기다리지 않는다.
 - 브라우저 내장 자동완성은 `DOMContentLoaded`에서 일어난다.
 
-### 예외 1. `DOMContentloaded`와 scripts
+### 예외 1. `DOMContentLoaded`와 scripts
 
 > 브라우저는 HTML 문서를 처리하는 도중에 `<script>`태그를 만나면, `<script>`를 실행한 뒤, HTML문서를 처리한다.
 
@@ -14,10 +14,10 @@
 
 **다른 예외**
 
-1. `async` 속성이 있는 스크립트는 `DOMContentloade`를 막지 않는다.
+1. `async` 속성이 있는 스크립트는 `DOMContentLoaded`를 막지 않는다.
 2. `'document.createElement('script')`로 동적으로 생성되고 웹페이지에 추가된 스크립트는 `DOMContentLoaded`를 막지 않는다.
 
-### 예외 2. `DOMContentloaded`와 styles
+### 예외 2. `DOMContentLoaded`와 styles
 
 > 스타일시트를 불러오는 태그 다음에 스크립트가 위치하면 이 스크립트는 스타일 시트가 로드 되기 전까지 실행되지 않는다.(스크립트에서 스타일에 영향을 받는 요소의 프로퍼티를 사용할 가능성이 있기 때문에)
 
@@ -28,9 +28,9 @@
 </script>
 ```
 
-👉 위와 같은 경우 `DOMContentloaded`는 `<script>`의 실행을 기다리고 `<script>`는 stylesheet의 로드를 기다리기 때문에 `DOMContentloaded`는 stylesheet의 로드를 기다리게 된다.
+👉 위와 같은 경우 `DOMContentLoaded`는 `<script>`의 실행을 기다리고 `<script>`는 stylesheet의 로드를 기다리기 때문에 `DOMContentLoaded`는 stylesheet의 로드를 기다리게 된다.
 
-👉 stylesheet밑에 `<script>`가 없다면 `DOMContentloaded`는 stylesheet의 load를 기다리지 않는다.
+👉 stylesheet밑에 `<script>`가 없다면 `DOMContentLoaded`는 stylesheet의 load를 기다리지 않는다.
 
 [질문(브라우저 내장 자동완성)](https://ko.javascript.info/onload-ondomcontentloaded#ref-1948)
 <br><br>
@@ -58,6 +58,63 @@
 - `loading` - 문서를 불러오는 중일 때
 - `interactive` - 문서가 완전히 불러와졌을 때
 - `complete` - 문서를 비롯한 이미지 등의 리소스들도 모두 불러와졌을 때
+  <br><br>
+
+## test
+### 1. script문의 실행 순서
+```
+<script>
+      window.onload = function () {
+        console.log('onload in script');
+      };
+</script>
+<script>
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOMContentLoaded in script');
+      });
+</script>
+<script>
+      console.log('in script');
+</script>
+```
+<img src="https://user-images.githubusercontent.com/60134628/158131701-4eb208d6-128b-4071-b82c-a8c962bbd1ee.png" width="400px" height="150px">
+
+1. script문이 `DOMContentLoaded` 전에 실행
+2. `DOMContentLoaded` 실행
+3. `onload` 실행
+
+### 2. 외부 스크립트 파일
+index.js
+```
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOMContentLoaded in index.js');
+});
+
+window.onload = function () {
+  console.log('onload in index.js');
+};
+
+console.log('in index.js');
+```
+1. 외부 script가 index.html의 console이 있는 script보다 아래에 있을 경우
+<img src="https://user-images.githubusercontent.com/60134628/158132905-523e1ff5-6072-4065-ae70-2d969ac98745.png" width="400px" height="200px">
+👉 index.html안의 스크립트문이 먼저 실행되고 외부 스크립트가 다음으로 실행되는 것을 확인할 수 있다.
+<br><br>
+
+2. 외부 script가 index.html의 console이 있는 script보다 위에 있을 경우
+<img src="https://user-images.githubusercontent.com/60134628/158133295-8d1d77ae-1426-4e75-be38-9aec2d64ab4c.png" width="400px" height="200px">
+👉 외부 스크립트가 먼저 실행되고 index.html안의 스크립트 문이 다음으로 실행되는 것을 확인할 수 있다.
+<br><br>
+
+3. 외부 script문에 defer를 속성을 선언할 경우
+<img src="https://user-images.githubusercontent.com/60134628/158133539-8c307429-ad65-4073-9ba3-7724e9230e73.png" width="400px" height="200px">
+👉 index.html안의 스크립트문이 먼저 실행되고 외부 스크립트가 다음으로 실행되는 것을 확인할 수 있다.
+<br><br>
+
+### 결론
+- html 문서 처리 중 `<script>` 태그를 만나면 바로 실행되게 된다. 이 실행은 `DOMContentLoaded` 보다 빠르다!
+- `<script>` 태그가 `defer` 속성을 가지고 있다면 html문서를 모두 처리한 다음 defer속성을 가진 `<script>` 가 실행된다.
+- document에 addEventListener로 `DOMContentLoaded` 시 동작할 함수를 정의하면 함수는 추가되지만 `window.onload`함수는 마지막으로 선언된 함수만 실행되는 것을 알 수 있다.
   <br><br><br>
 
 # major gc, minor gc
@@ -193,6 +250,14 @@
 ```
 li.push(`<li><a href="javascript:alert('XSS')"></a></li>`);
 ```
+<div style="display:flex">
+  <img src="https://user-images.githubusercontent.com/60134628/158129642-25a35f4d-a893-435b-85d0-4aecd9787cf4.png" width="400px" height="150px">
+  <img src="https://user-images.githubusercontent.com/60134628/158129684-c25cb821-c6ee-4d77-aed6-4d6818f821d8.png" width="400px" height="150px">
+</div>
+<div style="display:flex">
+  <img src="https://user-images.githubusercontent.com/60134628/158130434-d9505a1d-c294-425b-beee-45a8ab574f3e.png" width="400px" height="150px">
+  <img src="https://user-images.githubusercontent.com/60134628/158130455-306eb360-c8c8-48bb-8341-5bbd9843a511.png" width="400px" height="150px">
+</div>
 
 ```
 li.push(`<li><script>alert('XSS');</script></li>`);
