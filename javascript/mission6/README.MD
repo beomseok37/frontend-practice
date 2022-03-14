@@ -180,7 +180,7 @@ console.log('in index.js');
 - **스위핑**: 활성 상태로 표시되지 않은 객체들의 메모리 주소를 사용 가능한 목록(free list)에 사용 가능하다고 표시한다.
 - **압축**: 활성 상태의 객체들의 조각화를 줄이고 새 객체들에 대한 메모리 할당 성능을 증가시킨다.
 
-메이저 GC 또한 stop the world 프로세스이다. 이를 피하기 위해 V8에서는 다음과 같은 기술을 사용한다.
+메이저 GC 또한 stop the world 프로세스이다. 이를 피하기 위해 V8에서는 다음과 같은 기술을 사용한다. [참조](https://ui.toast.com/weekly-pick/ko_20200228)
 
 - **인크리멘탈 GC(Incremental GC)**: GC는 여러 개의 인크리멘탈 단계로 수행된다.(점진적인 단계로)
 - **동시 마킹(Concurrent marking)**: 마킹은 자바스크립트 메인 스레드에 영향을 주지 않고 다중 헬프 스레드를 사용해 동시에 수행된다. Write barrier는 헬퍼들이 동시에 마킹하는 동안 자바스크립트가 생성한 객체 간 참조를 추적하는 데 사용된다.
@@ -289,17 +289,18 @@ self descriptive한 코드들을 의미한다.
 
 ## XSS
 
-https://ui.toast.com/weekly-pick/ko_20200228
-https://namu.wiki/w/XSS
-https://noirstar.tistory.com/266
+- https://ui.toast.com/weekly-pick/ko_20200228
+- https://namu.wiki/w/XSS
+- https://noirstar.tistory.com/266
 
 ## GC
 
-https://developer.mozilla.org/ko/docs/Web/JavaScript/Memory_Management
+- https://developer.mozilla.org/ko/docs/Web/JavaScript/Memory_Management
+- https://ui.toast.com/weekly-pick/ko_20200228
 
 ## HTML 생명주기
 
-https://ko.javascript.info/onload-ondomcontentloaded
+- https://ko.javascript.info/onload-ondomcontentloaded
 
 ## Semantic
 
