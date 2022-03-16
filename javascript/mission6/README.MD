@@ -103,19 +103,19 @@ console.log('in index.js');
 ```
 
 1. 외부 script가 index.html의 console이 있는 script보다 아래에 있을 경우
-   <img src="https://user-images.githubusercontent.com/60134628/158132905-523e1ff5-6072-4065-ae70-2d969ac98745.png" width="400px" height="200px">
-   👉 index.html안의 스크립트문이 먼저 실행되고 외부 스크립트가 다음으로 실행되는 것을 확인할 수 있다.
-   <br><br>
+<img src="https://user-images.githubusercontent.com/60134628/158132905-523e1ff5-6072-4065-ae70-2d969ac98745.png" width="400px" height="200px">
+👉 index.html안의 스크립트문이 먼저 실행되고 외부 스크립트가 다음으로 실행되는 것을 확인할 수 있다.
+<br><br>
 
 2. 외부 script가 index.html의 console이 있는 script보다 위에 있을 경우
-   <img src="https://user-images.githubusercontent.com/60134628/158133295-8d1d77ae-1426-4e75-be38-9aec2d64ab4c.png" width="400px" height="200px">
-   👉 외부 스크립트가 먼저 실행되고 index.html안의 스크립트 문이 다음으로 실행되는 것을 확인할 수 있다.
-   <br><br>
+<img src="https://user-images.githubusercontent.com/60134628/158133295-8d1d77ae-1426-4e75-be38-9aec2d64ab4c.png" width="400px" height="200px">
+👉 외부 스크립트가 먼저 실행되고 index.html안의 스크립트 문이 다음으로 실행되는 것을 확인할 수 있다.
+<br><br>
 
 3. 외부 script문에 defer를 속성을 선언할 경우
-   <img src="https://user-images.githubusercontent.com/60134628/158133539-8c307429-ad65-4073-9ba3-7724e9230e73.png" width="400px" height="200px">
-   👉 index.html안의 스크립트문이 먼저 실행되고 외부 스크립트가 다음으로 실행되는 것을 확인할 수 있다.
-   <br><br>
+<img src="https://user-images.githubusercontent.com/60134628/158133539-8c307429-ad65-4073-9ba3-7724e9230e73.png" width="400px" height="200px">
+👉 index.html안의 스크립트문이 먼저 실행되고 외부 스크립트가 다음으로 실행되는 것을 확인할 수 있다.
+<br><br>
 
 ### 결론
 
@@ -282,6 +282,8 @@ li.push(script);
 ```
 
 dom api호출로 만든 태그에 script문을 innerText로 가졌을 경우,
+
+<img src="https://user-images.githubusercontent.com/60134628/158545092-bfb25dfc-00fc-4df5-be89-d3559bbd098b.png" width="400px" height="150px">
 
 스크립트문이 그대로 출력되는 것을 볼 수 있다.
 
