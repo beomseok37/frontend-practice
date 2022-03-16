@@ -61,7 +61,9 @@
   <br><br>
 
 ## test
+
 ### 1. script문의 실행 순서
+
 ```
 <script>
       window.onload = function () {
@@ -77,6 +79,7 @@
       console.log('in script');
 </script>
 ```
+
 <img src="https://user-images.githubusercontent.com/60134628/158131701-4eb208d6-128b-4071-b82c-a8c962bbd1ee.png" width="400px" height="150px">
 
 1. script문이 `DOMContentLoaded` 전에 실행
@@ -84,7 +87,9 @@
 3. `onload` 실행
 
 ### 2. 외부 스크립트 파일
+
 index.js
+
 ```
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOMContentLoaded in index.js');
@@ -96,22 +101,24 @@ window.onload = function () {
 
 console.log('in index.js');
 ```
+
 1. 외부 script가 index.html의 console이 있는 script보다 아래에 있을 경우
-<img src="https://user-images.githubusercontent.com/60134628/158132905-523e1ff5-6072-4065-ae70-2d969ac98745.png" width="400px" height="200px">
-👉 index.html안의 스크립트문이 먼저 실행되고 외부 스크립트가 다음으로 실행되는 것을 확인할 수 있다.
-<br><br>
+   <img src="https://user-images.githubusercontent.com/60134628/158132905-523e1ff5-6072-4065-ae70-2d969ac98745.png" width="400px" height="200px">
+   👉 index.html안의 스크립트문이 먼저 실행되고 외부 스크립트가 다음으로 실행되는 것을 확인할 수 있다.
+   <br><br>
 
 2. 외부 script가 index.html의 console이 있는 script보다 위에 있을 경우
-<img src="https://user-images.githubusercontent.com/60134628/158133295-8d1d77ae-1426-4e75-be38-9aec2d64ab4c.png" width="400px" height="200px">
-👉 외부 스크립트가 먼저 실행되고 index.html안의 스크립트 문이 다음으로 실행되는 것을 확인할 수 있다.
-<br><br>
+   <img src="https://user-images.githubusercontent.com/60134628/158133295-8d1d77ae-1426-4e75-be38-9aec2d64ab4c.png" width="400px" height="200px">
+   👉 외부 스크립트가 먼저 실행되고 index.html안의 스크립트 문이 다음으로 실행되는 것을 확인할 수 있다.
+   <br><br>
 
 3. 외부 script문에 defer를 속성을 선언할 경우
-<img src="https://user-images.githubusercontent.com/60134628/158133539-8c307429-ad65-4073-9ba3-7724e9230e73.png" width="400px" height="200px">
-👉 index.html안의 스크립트문이 먼저 실행되고 외부 스크립트가 다음으로 실행되는 것을 확인할 수 있다.
-<br><br>
+   <img src="https://user-images.githubusercontent.com/60134628/158133539-8c307429-ad65-4073-9ba3-7724e9230e73.png" width="400px" height="200px">
+   👉 index.html안의 스크립트문이 먼저 실행되고 외부 스크립트가 다음으로 실행되는 것을 확인할 수 있다.
+   <br><br>
 
 ### 결론
+
 - html 문서 처리 중 `<script>` 태그를 만나면 바로 실행되게 된다. 이 실행은 `DOMContentLoaded` 보다 빠르다!
 - `<script>` 태그가 `defer` 속성을 가지고 있다면 html문서를 모두 처리한 다음 defer속성을 가진 `<script>` 가 실행된다.
 - document에 addEventListener로 `DOMContentLoaded` 시 동작할 함수를 정의하면 함수는 추가되지만 `window.onload`함수는 마지막으로 선언된 함수만 실행되는 것을 알 수 있다.
@@ -250,6 +257,7 @@ console.log('in index.js');
 ```
 li.push(`<li><a href="javascript:alert('XSS')"></a></li>`);
 ```
+
 <div style="display:flex">
   <img src="https://user-images.githubusercontent.com/60134628/158129642-25a35f4d-a893-435b-85d0-4aecd9787cf4.png" width="400px" height="150px">
   <img src="https://user-images.githubusercontent.com/60134628/158129684-c25cb821-c6ee-4d77-aed6-4d6818f821d8.png" width="400px" height="150px">
@@ -267,7 +275,17 @@ li.push(`<li><script>alert('XSS');</script></li>`);
 
 다음과 같이 html태그에는 보여지지만, 브라우저가 해당 기능을 막아주는 것을 확인할 수 있었다.
 
-브라우저에서 막아준다고 그대로 활용하지말고 다른 방법을 알아보자!
+```
+const script = document.createElement('li');
+script.innerText = '<script>alert(1);</script>';
+li.push(script);
+```
+
+dom api호출로 만든 태그에 script문을 innerText로 가졌을 경우,
+
+스크립트문이 그대로 출력되는 것을 볼 수 있다.
+
+**결론**: 브라우저에서 막아준다고 그대로 활용하지말고 다른 방법을 알아보자!
 <br><br><br>
 
 # semantic
